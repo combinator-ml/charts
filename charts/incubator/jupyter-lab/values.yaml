@@ -1,0 +1,52 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+image:
+  # -- image repository
+  repository: jupyter/minimal-notebook
+  # -- image tag
+  # @default -- chart.appVersion
+  tag:
+  # -- image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Configures service settings for the chart.
+# @default -- See values.yaml
+service:
+  main:
+    ports:
+      http:
+        port: 8888
+
+# -- Configure configMaps for the chart here.
+# Additional configMaps can be added by adding a dictionary key similar to the 'config' object.
+# @default -- See values.yaml
+configmap:
+  config:
+    # -- Enables or disables the configMap
+    enabled: true
+    # -- Labels to add to the configMap
+    labels: {}
+    # -- Annotations to add to the configMap
+    annotations: {}
+    # -- configMap data content. Helm template enabled.
+    data:
+      jupyter_notebook_config.py: |
+        # See https://jupyter-notebook.readthedocs.io/en/stable/config.html#options
+        # For a full list of options
+        c.NotebookApp.token = ''
+
+# -- Configure persistence for the chart here.
+# Additional items can be added by adding a dictionary key similar to the 'config' key.
+# [[ref]](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage)
+# @default -- See below
+persistence:
+  config:
+    enabled: true
+    type: configMap
+    name: '{{ printf "%v-config" (include "common.names.fullname" .) }}'
+    mountPath: /home/jovyan/.jupyter

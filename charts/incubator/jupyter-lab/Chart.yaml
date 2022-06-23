@@ -1,0 +1,24 @@
+apiVersion: v2
+appVersion: hub-2.3.1
+description: jupyter-lab helm package
+name: jupyter-lab
+version: 1.0.0
+kubeVersion: ">=1.16.0-0"
+keywords:
+  - jupyter
+  - jupyter lab
+home: https://github.com/combinator-ml/charts/tree/master/charts/stable/jupyter-lab
+icon: https://avatars.githubusercontent.com/u/7388996?s=200&v=4
+sources:
+  - https://github.com/jupyter/docker-stacks
+maintainers:
+  - name: Phil Winder
+    email: phil@winder.ai
+dependencies:
+  - name: common
+    repository: https://library-charts.k8s-at-home.com
+    version: 4.4.2
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: Initial version

@@ -31,8 +31,8 @@ image:
 env:
   # -- Include the mlflow tracking URI just in case jupyter needs to connect to mlflow
   MLFLOW_NAME: "{{ default (.Values.mlflow.name) (.Values.modeldynamics.applications.mlflow.name) }}"
-  MLFLOW_HOST: '{{ ternary "" (printf "%s-" .Values.modeldynamics.internal.project.name) (empty .Values.modeldynamics.internal.project.name) }}$(MLFLOW_NAME)'
-  MLFLOW_TRACKING_URI: "{{ .Values.mlflow.scheme }}://$(MLFLOW_HOST).{{ .Release.Namespace }}.{{ .Values.mlflow.domain }}:{{ .Values.mlflow.port }}"
+  MLFLOW_HOST: '{{ ternary "" (printf "%s-" .Values.modeldynamics.internal.project.name) (empty .Values.modeldynamics.internal.project.name) }}{{ tpl .Values.env.MLFLOW_NAME . }}'
+  MLFLOW_TRACKING_URI: "{{ .Values.mlflow.scheme }}://{{ tpl .Values.env.MLFLOW_HOST . }}.{{ .Release.Namespace }}.{{ .Values.mlflow.domain }}:{{ .Values.mlflow.port }}"
   GRANT_SUDO: "yes"
   # - name: MLFLOW_S3_ENDPOINT_URL
   # value: "http://minio.minio.svc.cluster.local:9000" # TODO: parameterize based on configured storage target

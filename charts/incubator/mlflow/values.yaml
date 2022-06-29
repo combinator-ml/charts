@@ -5,8 +5,16 @@
 # https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
 #
 
+modeldynamics:
+  internal:
+    project:
+      name: ""
+  settings:
+    mlflow:
+      bucket: ""
+
 mlflow:
-  bucket: s3://helix-test
+  bucket: s3://your-s3-bucket
 
 image:
   # -- image repository
@@ -17,7 +25,7 @@ env:
   # -- Set the container timezone.
   TZ: UTC
   DATABASE_URL: postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ include "common.names.fullname" .}}-postgresql/{{ .Values.postgresql.auth.database }}?sslmode=disable
-  MLFLOW_ARTIFACT_ROOT: "{{ .Values.mlflow.bucket }}"
+  MLFLOW_ARTIFACT_ROOT: "{{ default .Values.mlflow.bucket .Values.modeldynamics.settings.mlflow.bucket }}"
 
 envFrom:
   - secretRef:

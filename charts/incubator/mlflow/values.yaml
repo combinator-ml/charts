@@ -14,7 +14,7 @@ modeldynamics:
       bucket: ""
 
 mlflow:
-  bucket: s3://your-s3-bucket
+  bucket: s3://your-s3-bucket #pragma: helix.modeldynamics.ai/expose
 
 image:
   # -- image repository

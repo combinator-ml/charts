@@ -5,17 +5,9 @@
 # https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
 #
 
-modeldynamics:
-  internal:
-    project:
-      name: ""
-  applications:
-    mlflow:
-      name: ""
-
 mlflow:
   scheme: "http"
-  name: "mlflow"
+  name: "mlflow" # pragma: helix.modeldynamics.ai/expose
   domain: "svc.cluster.local"
   port: "5000"
 
@@ -30,7 +22,7 @@ image:
 
 env:
   # -- Include the mlflow tracking URI just in case jupyter needs to connect to mlflow
-  MLFLOW_NAME: "{{ default (.Values.mlflow.name) (.Values.modeldynamics.applications.mlflow.name) }}"
+  MLFLOW_NAME: "{{ .Values.mlflow.name }}"
   MLFLOW_HOST: '{{ ternary "" (printf "%s-" .Values.modeldynamics.internal.project.name) (empty .Values.modeldynamics.internal.project.name) }}{{ tpl .Values.env.MLFLOW_NAME . }}'
   MLFLOW_TRACKING_URI: "{{ .Values.mlflow.scheme }}://{{ tpl .Values.env.MLFLOW_HOST . }}.{{ .Release.Namespace }}.{{ .Values.mlflow.domain }}:{{ .Values.mlflow.port }}"
   GRANT_SUDO: "yes"
@@ -39,7 +31,7 @@ env:
 
 envFrom:
   - secretRef:
-      name: aws-credentials
+      name: aws-credentials # pragma: helix.modeldynamics.ai/expose
       optional: true
 
 # -- Configures service settings for the chart.
@@ -78,3 +70,9 @@ persistence:
     type: configMap
     name: '{{ printf "%v-config" (include "common.names.fullname" .) }}'
     mountPath: /home/jovyan/.jupyter
+
+# -- Settings injected by modeldynamics.ai
+modeldynamics:
+  internal:
+    project:
+      name: ""

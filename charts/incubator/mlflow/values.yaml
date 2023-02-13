@@ -5,9 +5,6 @@
 # https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
 #
 
-mlflow:
-  bucket: s3://your-s3-bucket # pragma: helix.modeldynamics.ai/expose
-
 image:
   # -- image repository
   repository: ghcr.io/combinator-ml/mlflow
@@ -17,7 +14,6 @@ env:
   # -- Set the container timezone.
   TZ: UTC
   DATABASE_URL: postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ include "common.names.fullname" .}}-postgresql/{{ .Values.postgresql.auth.database }}?sslmode=disable
-  MLFLOW_ARTIFACT_ROOT: "{{ .Values.mlflow.bucket }}"
 
 envFrom:
   - secretRef:

@@ -78,6 +78,11 @@ persistence:
     type: configMap
     name: '{{ printf "%v-config" (include "common.names.fullname" .) }}'
     mountPath: /home/jovyan/.jupyter
+  work:
+    enabled: true
+    type: pvc
+    existingClaim: project-data
+    mountPath: /home/jovyan/work
 
 # -- Settings injected by modeldynamics.ai
 modeldynamics:
